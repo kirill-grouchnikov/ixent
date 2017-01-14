@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="ixent" default="all">
+
+	<!-- Compiler options -->
+	<property name="compiler.debug" value="on" />
+	<property name="compiler.generate.no.warnings" value="off" />
+	<property name="compiler.args" value="" />
+	<property name="compiler.max.memory" value="128m" />
+	<patternset id="compiler.excluded" />
+	<patternset id="compiler.resources">
+		<include name="**/?*.properties" />
+		<include name="**/?*.xml" />
+		<include name="**/?*.gif" />
+		<include name="**/?*.png" />
+		<include name="**/?*.jpeg" />
+		<include name="**/?*.jpg" />
+		<include name="**/?*.html" />
+		<include name="**/?*.dtd" />
+		<include name="**/?*.tld" />
+		<include name="**/?*.ttf" />
+		<include name="**/?*.svg" />
+	</patternset>
+	<!-- JDK definitions -->
+
+	<property name="jdk.home.java_version_1.6.0" value="C:/Program Files/Java/jdk1.6.0_12" />
+	<path id="jdk.classpath.java_version_1.6.0">
+		<fileset dir="${jdk.home.java_version_1.6.0}">
+			<include name="jre/lib/charsets.jar" />
+			<include name="jre/lib/deploy.jar" />
+			<include name="jre/lib/javaws.jar" />
+			<include name="jre/lib/jce.jar" />
+			<include name="jre/lib/jsse.jar" />
+			<include name="jre/lib/plugin.jar" />
+			<include name="jre/lib/rt.jar" />
+			<include name="jre/lib/ext/dnsns.jar" />
+			<include name="jre/lib/ext/localedata.jar" />
+			<include name="jre/lib/ext/sunjce_provider.jar" />
+			<include name="jre/lib/ext/sunpkcs11.jar" />
+		</fileset>
+	</path>
+
+	<property name="project.jdk.home" value="${jdk.home.java_version_1.6.0}" />
+	<property name="project.jdk.classpath" value="jdk.classpath.java_version_1.6.0" />
+	<!-- Project Libraries -->
+	<!-- Global Libraries -->
+
+
+	<dirname property="module.ixent.basedir" file="${ant.file}" />
+
+	<property name="compiler.args.ixent" value="${compiler.args}" />
+
+	<property name="ixent.build.dir" value="${module.ixent.basedir}/build/" />
+	<property name="ixent.output.dir" value="${ixent.build.dir}/classes" />
+	<property name="ixent.drop.dir" value="${module.ixent.basedir}/drop" />
+	<property name="ixent.lib.dir" value="${module.ixent.basedir}/lib" />
+	<property name="ixent.src.dir" value="${module.ixent.basedir}/src/" />
+
+	<path id="ixent.module.bootclasspath">
+		<!-- Paths to be included in compilation bootclasspath -->
+	</path>
+
+	<property name="module.jdk.home.ixent" value="${project.jdk.home}" />
+	<property name="module.jdk.classpath.ixent" value="${project.jdk.classpath}" />
+
+	<path id="ixent.module.classpath">
+		<path refid="${module.jdk.classpath.ixent}" />
+		<pathelement location="${ixent.lib.dir}/junit.jar" />
+		<pathelement location="${ixent.lib.dir}/jxlayer.jar" />
+		<pathelement location="${ixent.lib.dir}/flamingo.jar" />
+		<pathelement location="${ixent.lib.dir}/substance.jar" />
+		<pathelement location="${ixent.lib.dir}/substance-flamingo.jar" />
+		<pathelement location="${ixent.lib.dir}/forms-1.0.7.jar" />
+	</path>
+
+	<patternset id="excluded.from.module.ixent" />
+
+	<patternset id="excluded.from.compilation.ixent">
+		<patternset refid="excluded.from.module.ixent" />
+		<patternset refid="compiler.excluded" />
+	</patternset>
+
+	<path id="ixent.module.sourcepath">
+		<dirset dir="${ixent.src.dir}">
+			<include name="org/jvnet/ixent" />
+		</dirset>
+	</path>
+
+	<target name="compile.module.ixent" depends="compile.module.ixent.production" description="compile module ixent" />
+
+	<target name="compile.module.ixent.production" description="compile module ixent production classes">
+		<mkdir dir="${ixent.output.dir}" />
+		<javac destdir="${ixent.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.ixent}/bin/javac">
+			<compilerarg line="${compiler.args.ixent}" />
+			<bootclasspath refid="ixent.module.bootclasspath" />
+			<classpath refid="ixent.module.classpath" />
+			<src refid="ixent.module.sourcepath" />
+			<patternset refid="excluded.from.compilation.ixent" />
+		</javac>
+		<copy todir="${ixent.output.dir}">
+			<fileset dir="${ixent.src.dir}">
+				<patternset refid="compiler.resources" />
+				<type type="file" />
+				<patternset refid="excluded.from.compilation.ixent" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean.module.ixent" description="cleanup module">
+		<delete dir="${ixent.output.dir}" />
+	</target>
+
+	<target name="init" description="Build initialization">
+		<!-- Perform any build initialization in this target -->
+	</target>
+
+	<target name="jar-bin" description="create runtime jar">
+		<mkdir dir="${ixent.drop.dir}" />
+		<delete file="${ixent.drop.dir}/ixent.jar" />
+		<jar compress="true" destfile="${ixent.drop.dir}/ixent.jar" manifest="${ixent.src.dir}/META-INF/MANIFEST.MF">
+			<fileset dir="${ixent.output.dir}/"/>
+			<fileset dir="${module.ixent.basedir}/" includes="resources/**" />
+		</jar>
+		<copy file="${ixent.drop.dir}/ixent.jar" todir="${module.ixent.basedir}/www/webstart" />
+	</target>
+
+	<target name="distro" description="create distribution">
+		<delete file="${module.ixent.basedir}/ixent-all.zip" />
+		<zip destfile="${module.ixent.basedir}/ixent-all.zip" compress="true">
+			<fileset dir="${module.ixent.basedir}">
+				<include name="drop/**" />
+				<include name="docs/**" />
+				<include name="lib/**" />
+				<include name="src/**" />
+				<include name="www/index.html" />
+				<include name="www/docs/**" />
+				<include name="www/images/**" />
+				<include name="build.xml" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="jar" depends="jar-bin" description="create all jars" />
+
+	<target name="clean" depends="clean.module.ixent" description="cleanup all" />
+
+	<target name="all" depends="init, clean, compile.module.ixent, jar" description="build all" />
+</project>

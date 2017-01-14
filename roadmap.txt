@@ -1,0 +1,88 @@
+13.08.2004
+	Extracting graphic packages to Ixent
+14.08.2004
+	Sparse matrix
+	K-means
+	Hungarian algorithm for assignment problem
+15.08.2004
+	Gaussian filters, G1, G2
+16.08.2004
+	Greyscale image from true color
+	Optimizing filters (non-zero value bounding box)
+	Convolving image with filters
+	Filter bank (regular, difference, G1, G2)
+	Running K-means on the convolved image
+17.08.2004
+	Dense matrix + interface for matrices	
+	Matrix multiplication by vector + optimizations for sparse matrices
+	Eigenvalues and eigenvectors for tri-diagonal matrix
+	Lanczos eigenmethod for real symmetric matrices
+	Optimization on sparse matrix - doubling the size instead of incrementing
+07.09.2004
+	Histogram similarity (Chi-2)
+	AMG multi scale segmentation - brightness only, brightness and texture
+14.09.2004
+    	Structure engine - edges, segmentation, displacement; computing vicinity map
+        		and gradient map
+15.09.2004
+	Perlin noise based turbulence generator
+    	Structure engine API changes
+    	Log formatter
+16.09.2004
+    	Multiplying sparse matrix by vector - done in sparse matrix
+    	AMG segmentation -
+	        	using aggregate coarsener to speed up the coarsening
+        		interactive tuning of coarsening step
+        		finding closest neighbours using previous neighbour information and not Delaunay
+            			triangulation at early stages
+        		returning salient segments from all scales and not only from the last graph 
+    	Replaced most of the data structures with Java Collection classes (including
+        		LinkedList, TreeMap and TreeSet)
+    	Using Java's Point2D and decorating it with own class for additional functionality
+    	Replaced most of the public members with public getters and setters (where necessary)
+17.09.2004
+    	Replaced all old data structures with Java Collection classes: List, Stack, Tree,
+        		Balanced Tree. Left - Multison Tree and Quad Tree
+    	Replaced Vertex2D by Java's Point2D where appropriate
+18.09.2004
+    	Tesselation module
+    	Turbulence correction
+    	Changed API of the structure engine - moved computing maps outside this class
+    	First version of the framework engine
+    	Image creator for showing various secondary results
+22.09.2004
+	JUnit 3.8.1 integrated
+23.09.2004
+	JUnit tests for Matrix, Segment, Square
+24.09.2004
+	Additional functions in Square (overlap, area of intersection)
+	Mosaic NPR engine - 
+		each tile is sized according to the structure vicinity map
+		each tile is rotated according to the structure gradient map
+		additional tiles are fitted to cover holes (10% overlapping maximum)
+		each tile is colored according to weighted average color of the undelying pixels
+25.09.2004
+	Watercolor pigment class
+28.09.2004
+	Pigment matcher
+29.09.2004
+	Median-cut color quantizer
+	Changed Segmentator API to return both areal and boundary information
+	Watercolor simulation skeleton + data structures for glazes
+08.10.2004
+	Additional function in Segment - distance to point (JUnit)
+	Additional function in Polygon - distance to point
+	Pigments from additional sources
+	Gaussian convolution of true-color images (separate treatment of 3 color channels)
+	Watercolor NPR engine - 
+		convolving image with Gaussian filter to remove high-frequency details
+		tesselating (as specified) to smooth and average colors
+		matching initial pigments to each pixel
+		performing the simulation on segmented image (glazes)
+		Kubelka-Munk compositing of pigments for each pixel
+		adding "ink" strikes for edges (as specified)
+            Changed API of NPR engines to allow passing additional weights (for tesselation, edge detection
+		and displacement)
+14.10.2004
+	Diffused energy NPR engine - based on particles
+
